@@ -47,7 +47,9 @@ class CreateWorkout():
     'no_days_selected': 'You must select at least one day!',
     'day_error': 'Select a valid day!\n',
     'ask_exercise_name': 'What is the exercise name? ',
-    'ask_exercise_name_error': 'Enter a valid name!\n'
+    'ask_exercise_name_error': 'Enter a valid name!\n',
+    'ask_exercise_series': 'How many series? ',
+    'ask_exercise_series_no_series': 'You must select one serie'
   }
 
   def __init__(self):
@@ -119,5 +121,14 @@ class CreateWorkout():
         exercise_name = exercise_name_input.title()
     return exercise_name
 
+  def ask_exercise_series(self):
+    exercise_series = 0
+    while exercise_series <= 0:
+      exercise_series_input = input(self.create_workout_messages['ask_exercise_series']).strip()
+      if not exercise_series_input.isdigit():
+        print(self.create_workout_messages['ask_exercise_series_no_series'])
+        continue
+      exercise_series = int(exercise_series_input)
+    return exercise_series
 
 Menu()
