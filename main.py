@@ -18,8 +18,8 @@ class Menu():
       print()
 
       if user_option in ['1', 'create', 'create workout']:
-        create = Create_workout()
-        create.workout_infos['name'] = create.ask_workout_name()
+        create = CreateWorkout()
+        create.workout_data['name'] = create.ask_workout_name()
         create.ask_workout_days()
         break
       elif user_option in ['2', 'edit', 'edit workout']:
@@ -39,7 +39,7 @@ class Menu():
         break
 
   
-class Create_workout():
+class CreateWorkout():
   create_workout_messages = {
     'name': 'What is the name of the workout?\n\n',
     'name_error': 'Workout name cannot be empty!\n',
@@ -49,7 +49,7 @@ class Create_workout():
   }
 
   def __init__(self):
-    self.workout_infos = {}
+    self.workout_data = {}
       # 'name': '',
       # 'days': {
       #   'monday': {
@@ -68,46 +68,45 @@ class Create_workout():
   def ask_workout_name(self):
     name = ''
     while not name:
-      name_typing = input(self.create_workout_messages['name'])
-      if len(name_typing) < 1:
+      name_input = input(self.create_workout_messages['name'])
+      if len(name_input) < 1:
         print(self.create_workout_messages['name_error'])
         continue
       else:
-        name = name_typing.strip().title()
+        name = name_input.strip().title()
     return name
   
   def ask_workout_days(self):
     day_name_options = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
-    number_of_days = 0
-    day = ''
-    while not day:
+    selected_days_count = 0
+    selected_day = ''
+    while not selected_day:
       for index, day_option in enumerate(day_name_options):
         print(f'{index})', day_option.capitalize())
       
       print()
-      day_typing = input(self.create_workout_messages['choose_day']).strip().lower()
+      day_input = input(self.create_workout_messages['choose_day']).strip().lower()
       
-      if day_typing in ['d', 'done'] and number_of_days == 0:
+      if day_input in ['d', 'done'] and selected_days_count == 0:
         print(self.create_workout_messages['no_days_selected'])
         continue
-      elif day_typing in ['d', 'done']:
+      elif day_input in ['d', 'done']:
         break
       else:
-        if day_typing.isdigit():
-          index = int(day_typing)
+        if day_input.isdigit():
+          index = int(day_input)
           if index >= 0 and index < len(day_name_options):
-            chosen_day = day_name_options[index]
-            day = chosen_day
-            number_of_days += 1
-        elif day_typing in day_name_options:
-          day = day_typing
-          number_of_days += 1
+            selected_day = day_name_options[index]
+            selected_days_count += 1
+        elif day_input in day_name_options:
+          selected_day = day_input
+          selected_days_count += 1
         else:
           print(self.create_workout_messages['day_error'])
           continue
       break
 
-    print(day)
+    print(selected_day)
 
 
 Menu()
