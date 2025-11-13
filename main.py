@@ -20,7 +20,7 @@ class Menu():
       if user_option in ['1', 'create', 'create workout']:
         create = CreateWorkout()
         create.workout_data['name'] = create.ask_workout_name()
-        create.ask_workout_days()
+        create.workout_data['days'] = create.ask_workout_days()
         break
       elif user_option in ['2', 'edit', 'edit workout']:
         print('edit workout')
@@ -45,7 +45,9 @@ class CreateWorkout():
     'name_error': 'Workout name cannot be empty!\n',
     'choose_day': 'Choose the day or type [d]one if finished: ',
     'no_days_selected': 'You must select at least one day!',
-    'day_error': 'Select a valid day!\n'
+    'day_error': 'Select a valid day!\n',
+    'ask_exercise_name': 'What is the exercise name? ',
+    'ask_exercise_name_error': 'Enter a valid name!\n'
   }
 
   def __init__(self):
@@ -106,7 +108,16 @@ class CreateWorkout():
           continue
       break
 
-    print(selected_day)
+  def ask_exercise_name(self):
+    exercise_name = ''
+    while not exercise_name:
+      exercise_name_input = input(self.create_workout_messages['ask_exercise_name']).strip()
+      if exercise_name_input.isdigit() or len(exercise_name_input) < 1:
+        print(self.create_workout_messages['ask_exercise_name_error'])
+        continue
+      else:
+        exercise_name = exercise_name_input.title()
+    return exercise_name
 
 
 Menu()
