@@ -1,11 +1,21 @@
+import os
 
 all_workouts = []
 
 global_messages = {
+  'welcome': '-== Welcome! ==-\n',
   'back': 'Type [b]ack to return ',
   'invalid_workout': 'Invalid workout selection!',
-  'empty_workout': 'There are no workouts to list.\n'
+  'empty_workout': 'No workout was found.\n',
+  'listed_workouts': 'Workouts found'
 }
+
+def clear_screen():
+  system = os.name
+  if system == 'nt':
+    os.system('cls')
+  else:
+    os.system('clear')
 
 def check_empty_list(workouts):
     if len(workouts) == 0:
@@ -15,16 +25,15 @@ def check_empty_list(workouts):
 
 class Menu():
   main_menu_messages = {
-      'welcome': '-== welcome! ==-\n',
-      'options': '1. Create workout\n2. Edit workout\n3. Delete workout\n4. List workouts\n5. Exit\n\n',
-      'exit': 'bye...'
+      'options': '1. Create workout\n2. Edit workout\n3. Delete workout\n4. List workouts\n5. Exit\n\n'
     }
   
   def __init__(self):
     self.loop_menu()
 
   def loop_menu(self):
-    print(Menu.main_menu_messages['welcome'])
+    clear_screen()
+    print(global_messages['welcome'])
 
     while True:
       user_option = input(Menu.main_menu_messages['options'])
@@ -46,9 +55,11 @@ class Menu():
         list_workout = ListWorkout()
         list_workout.list_workouts()
       elif user_option in ['5', 'exit']:
-        print(self.main_menu_messages['exit'])
+        clear_screen()
         exit()
       else:
+        clear_screen()
+        print(global_messages['welcome'])
         continue
 
   
@@ -66,17 +77,18 @@ class CreateWorkout():
     'ask_exercise_reps_min': 'Minimum reps: ',
     'ask_exercise_reps_max': 'Maximum reps: ',
     'invalid_exercise_reps': 'Invalid input. Please enter valid numbers.',
-    'available_days': 'Available days:',
-    'choose_day': 'Choose a day or type [d]one to finish: ',
+    'available_days': 'Available days:\n',
+    'choose_day': '\nChoose a day or type [d]one to finish: ',
     'no_days_selected': 'You must select at least one day.',
     'invalid_day': 'Please choose a valid day.',
-    'complete_workout': '\nWorkout created successfully!\n'
+    'complete_workout': 'Workout created successfully!\n'
 }
 
   def __init__(self):
     self.workout_data = {}
 
   def ask_workout_name(self):
+    clear_screen()
     workout_name = ''
     while not workout_name:
       workout_name_input = input(self.create_workout_messages['ask_workout_name']).strip()
@@ -88,6 +100,7 @@ class CreateWorkout():
     return workout_name
 
   def ask_exercise_name(self):
+    clear_screen()
     exercise_name = ''
     while not exercise_name:
       exercise_name_input = input(self.create_workout_messages['ask_exercise_name']).strip()
@@ -99,6 +112,7 @@ class CreateWorkout():
     return exercise_name
 
   def ask_exercise_series(self):
+    clear_screen()
     exercise_series = 0
     while exercise_series <= 0:
       exercise_series_input = input(self.create_workout_messages['ask_exercise_series']).strip()
@@ -109,6 +123,7 @@ class CreateWorkout():
     return exercise_series
   
   def ask_exercise_reps(self):
+    clear_screen()
     exercise_reps_min = 0
     exercise_reps_max = 0
     while exercise_reps_min <= 0 or exercise_reps_max <= 0:
@@ -127,6 +142,7 @@ class CreateWorkout():
   
   def build_workout(self):
     workout_name = self.ask_workout_name()
+    clear_screen()
     self.workout_data['name'] = workout_name
     self.workout_data['days'] = {}
     available_days = self.days.copy()
@@ -134,11 +150,11 @@ class CreateWorkout():
       print(self.create_workout_messages['available_days'])
       for i, day in enumerate(available_days):
         print(f"{i}) {day.capitalize()}")
-      print()
       day_input = input(self.create_workout_messages['choose_day']).strip().lower()
       chosen_day = None
       if day_input in ['d', 'done']:
         if not self.workout_data['days']:
+          clear_screen()
           print(self.create_workout_messages['no_days_selected'])
           continue
         break
@@ -147,11 +163,13 @@ class CreateWorkout():
         if index >= 0 and index < len(available_days):
           chosen_day = available_days[index]
         else:
+          clear_screen()
           print(self.create_workout_messages['invalid_day'])
           continue
       elif day_input in available_days:
         chosen_day = day_input
       else:
+        clear_screen()
         print(self.create_workout_messages['invalid_day'])
         continue
       self.workout_data['days'][chosen_day] = {'exercises': []}
@@ -165,10 +183,13 @@ class CreateWorkout():
           'reps_min': reps_min,
           'reps_max': reps_max
         })
+        clear_screen()
         add_another = input(self.create_workout_messages['ask_another_exercise']).strip().lower()
         if add_another not in ['y', 'yes']:
+          clear_screen()
           break
       available_days.remove(chosen_day)
+    clear_screen()
     print(self.create_workout_messages['complete_workout'])
 
 class DeleteWorkout():
@@ -182,17 +203,20 @@ class DeleteWorkout():
     pass
 
   def delete_workout(self):
+    clear_screen()
     if check_empty_list(all_workouts):
       return
     listing = True
     while listing:
+      print(f"{global_messages['listed_workouts']} ({len(all_workouts)}):\n")
       for i, workout in enumerate(all_workouts):
         print(f'{i})', workout['name'])
-      print()
-      print(global_messages['back'])
+      print(f"\n{global_messages['back']}")
       delete_input = input(self.delete_workout_messages['ask_delete'])
+      clear_screen()
       if delete_input in ['b', 'back']:
         listing = False
+        print(global_messages['welcome'])
         continue
       user_response = False
       if delete_input.isdigit():
@@ -204,9 +228,11 @@ class DeleteWorkout():
                 del all_workouts[index]
                 user_response = True
                 listing = False
+                clear_screen()
                 print(self.delete_workout_messages['successfully_deleted'])
               elif sure_or_not in ['n', 'no']:
                 user_response = True
+                clear_screen()
               else:
                 continue
         else:
@@ -216,7 +242,6 @@ class DeleteWorkout():
 
 class ListWorkout():
   list_workout_messages = {
-    'listed': 'Workouts',
     'view_workout': 'Which workout would you like to view? '
 }
 
@@ -224,29 +249,38 @@ class ListWorkout():
     pass
 
   def list_workouts(self):
+    clear_screen()
     if check_empty_list(all_workouts):
       return
-    print(self.list_workout_messages['listed'], f'({len(all_workouts)}):')
     while True:
-      print()
+      print(f"{global_messages['listed_workouts']} ({len(all_workouts)}):\n")
       for i, workout in enumerate(all_workouts):
         print(f'{i})', workout['name'])
       print(f"\n{global_messages['back']}")
       workout_input = input(self.list_workout_messages['view_workout'])
       if workout_input in ['b', 'back']:
+        clear_screen()
+        print(global_messages['welcome'])
         break
       if workout_input.isdigit():
         index = int(workout_input)
         if index >= 0 and index < len(all_workouts):
           selected_workout = all_workouts[index]
           while True:
+            clear_screen()
             print(self.format_workout(selected_workout))
             back = input(f"{global_messages['back']}")
             if back in ['b', 'back']:
+              clear_screen()
               break
         else:
-          print(self.list_workout_messages['invalid_workout'])
+          clear_screen()
+          print(global_messages['invalid_workout'])
           continue
+      else:
+        clear_screen()
+        print(global_messages['invalid_workout'])
+        continue
   
   def format_workout(self, workout):
     workout_name = f"Workout: {workout['name']}\n"
