@@ -1,4 +1,6 @@
 
+all_workouts = []
+
 class Menu():
   main_menu_messages = {
       'welcome': '-== welcome! ==-\n',
@@ -18,8 +20,9 @@ class Menu():
       print()
 
       if user_option in ['1', 'create', 'create workout']:
-        create = CreateWorkout()
-        create.build_workout()
+        create_workout = CreateWorkout()
+        create_workout.build_workout()
+        all_workouts.append(create_workout.workout_data)
       elif user_option in ['2', 'edit', 'edit workout']:
         print('edit workout')
         break
@@ -27,8 +30,8 @@ class Menu():
         print('delete workout')
         break
       elif user_option in ['4', 'list', 'list workout']:
-        print('exit')
-        break
+        list_workout = ListWorkout(create_workout)
+        list_workout.list_workouts()
       elif user_option in ['5', 'exit']:
         print('exit')
         break
@@ -61,20 +64,6 @@ class CreateWorkout():
 
   def __init__(self):
     self.workout_data = {}
-      # 'name': '',
-      # 'days': {
-      #   'monday': {
-      #     'exercises': [
-      #       {'name': '', 'series': '', 'reps': ''}
-      #     ]
-      #   },
-      #   'tuesday': {},
-      #   'wednesday': {},
-      #   'thursday': {},
-      #   'friday': {},
-      #   'saturday': {},
-      #   'sunday': {}
-      # }
 
   def ask_workout_name(self):
     workout_name = ''
@@ -175,4 +164,51 @@ class CreateWorkout():
       available_days.remove(chosen_day)
     print(self.create_workout_messages['workout_complete'])
       
+class ListWorkout():
+  list_workout_messages = {
+    'empty': 'No workout to list.',
+    'listed': 'Workouts',
+    'view_workout': 'What workout would you like to view? ',
+    'empty_workout': 'No one workout for list.\n',
+    'invalid_workout': 'Invalid workout!',
+    'back': '\ntype [b]ack to back '
+  }
+
+  def __init__(self, create_instance):
+    self.create_instance = create_instance
+
+  def list_workouts(self):
+    available_workouts = len(all_workouts)
+    print(self.list_workout_messages['listed'], f'({available_workouts}):\n')
+    while True:
+      for i, workout in enumerate(all_workouts):
+        print(f'{i})', workout['name'])
+      print(self.list_workout_messages['back'])
+      workout_input = input(self.list_workout_messages['view_workout'])
+      if workout_input in ['b', 'back']:
+        break
+      if workout_input.isdigit():
+        index = int(workout_input)
+        if index >= 0 and index < available_workouts:
+          workout_input = all_workouts[index]
+          while True:
+            print(f'{workout_input['name']}\n')
+            print(workout_input)
+            back = input(self.list_workout_messages['back'])
+            if back in ['b', 'back']:
+              break
+        else:
+          print(self.list_workout_messages['invalid_workout'])
+          continue
+
 Menu()
+
+
+
+# {
+#   'name': 'Asdsa', 
+#   'days': 
+#     {'monday': 
+#       {'exercises': [
+#         {'name': 'Asdasd', 'series': 2, 'reps_min': 2, 'reps_max': 2}
+#     ]}}}
