@@ -173,7 +173,8 @@ class CreateWorkout():
         print(self.create_workout_messages['invalid_day'])
         continue
       self.workout_data['days'][chosen_day] = {'exercises': []}
-      while True:
+      ask_workout_infos_flag = True
+      while ask_workout_infos_flag:
         exercise_name = self.ask_exercise_name()
         series = self.ask_exercise_series()
         reps_min, reps_max = self.ask_exercise_reps()
@@ -184,10 +185,18 @@ class CreateWorkout():
           'reps_max': reps_max
         })
         clear_screen()
-        add_another = input(self.create_workout_messages['ask_another_exercise']).strip().lower()
-        if add_another not in ['y', 'yes']:
-          clear_screen()
-          break
+        ask_another_loop_flag = True
+        while ask_another_loop_flag:
+          add_another = input(self.create_workout_messages['ask_another_exercise']).strip().lower()
+          if add_another in ['y', 'yes']:
+            clear_screen()
+            ask_another_loop_flag = False
+          elif add_another in ['no', 'n']:
+            clear_screen()
+            ask_another_loop_flag = False
+            ask_workout_infos_flag = False
+          else:
+            continue
       available_days.remove(chosen_day)
     clear_screen()
     print(self.create_workout_messages['complete_workout'])
