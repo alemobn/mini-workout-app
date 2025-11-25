@@ -235,6 +235,8 @@ class EditWorkout():
           selected_workout = all_workouts[index]
           editing = True
           while editing:
+            under_development = '-== This menu is still under development.. ==-\n'
+            print(under_development)
             available_options = ['rename workout']
             workout_name_msg = f"Workout: {selected_workout['name']}\n"
             print(workout_name_msg)
@@ -255,15 +257,14 @@ class EditWorkout():
         print(global_messages['invalid_workout'])
 
   def rename_workout(self, workout, title_msg):
-    under_development = '-== This menu is still under development.. ==-\n'
     rename_workout_flag = True
     while rename_workout_flag:
       clear_screen()
-      print(under_development)
       print(title_msg)
       new_workout_name = input(self.edit_workout_messages['ask_new_workout_name'])
       workout['name'] = new_workout_name.title().strip()
       rename_workout_flag = False
+      clear_screen()
 
 class DeleteWorkout():
   delete_workout_messages = {
