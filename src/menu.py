@@ -17,7 +17,8 @@ class Menu:
 5. Exit\n
 """
 
-    def __init__(self):
+    def __init__(self, storage):
+        self.storage = storage
         self.loop_menu()
 
     def loop_menu(self):
@@ -28,13 +29,15 @@ class Menu:
             user_option = user_option.lower().strip()
             print()
             if user_option in ['1', 'create', 'create workout']:
-                create_workout = CreateWorkout()
+                create_workout = CreateWorkout(self.storage)
                 create_workout.build_workout()
                 all_workouts.append(create_workout.workout_data)
             elif user_option in ['2', 'edit', 'edit workout']:
-                EditWorkout().edit_workout()
+                edit_workout = EditWorkout(self.storage)
+                edit_workout.edit_workout()
             elif user_option in ['3', 'delete', 'delete workout']:
-                DeleteWorkout().delete_workout()
+                delete_workout = DeleteWorkout(self.storage)
+                delete_workout.delete_workout()
             elif user_option in ['4', 'list', 'list workout']:
                 ListWorkout().list_workouts()
             elif user_option in ['5', 'exit']:

@@ -39,7 +39,8 @@ class CreateWorkout:
         'complete_workout': 'Workout created successfully!'
     }
 
-    def __init__(self):
+    def __init__(self, storage):
+        self.storage = storage
         self.workout_data = {}
 
     def ask_workout_name(self):
@@ -174,6 +175,7 @@ class CreateWorkout:
                         continue
             available_days.remove(chosen_day)
         clear_screen()
+        self.storage.save_workout(self.workout_data)
         print(self.CREATE_WORKOUT_MESSAGES['complete_workout'])
 
 
@@ -186,8 +188,8 @@ class EditWorkout:
         'ask_new_workout_name':  'What name would you like to use? '
     }
 
-    def __init__(self):
-        pass
+    def __init__(self, storage):
+        self.storage = storage
 
     def edit_workout(self):
         clear_screen()
@@ -259,8 +261,12 @@ class EditWorkout:
             print(title_msg)
             new_workout_name = input(
                 self.EDIT_WORKOUT_MESSAGES['ask_new_workout_name']
+                ).strip().title()
+            old_name = workout['name']
+            workout['name'] = new_workout_name
+            self.storage.rename_workout_file(
+                old_name, new_workout_name, workout
                 )
-            workout['name'] = new_workout_name.title().strip()
             rename_workout_flag = False
             clear_screen()
 
@@ -274,8 +280,8 @@ class DeleteWorkout:
         'successfully_deleted': 'Workout successfully deleted!'
     }
 
-    def __init__(self):
-        pass
+    def __init__(self, storage):
+        self.storage = storage
 
     def delete_workout(self):
         clear_screen()
@@ -302,6 +308,8 @@ class DeleteWorkout:
             if delete_input.isdigit():
                 index = int(delete_input)
                 if index >= 0 and index < len(all_workouts):
+                    workout_to_delete = all_workouts[index]
+                    workout_to_delete_name = workout_to_delete["name"]
                     while not user_response:
                         sure_or_not = input(
                             self.DELETE_WORKOUT_MESSAGES['ask_sure_delete']
@@ -310,6 +318,7 @@ class DeleteWorkout:
                             del all_workouts[index]
                             user_response = True
                             listing = False
+                            self.storage.delete_workout(workout_to_delete_name)
                             clear_screen()
                             print(
                                 self.DELETE_WORKOUT_MESSAGES[
