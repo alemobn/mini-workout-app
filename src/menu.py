@@ -1,11 +1,8 @@
-from utils import clear_screen, global_messages
-from workout_manager import (
-    CreateWorkout,
-    EditWorkout,
-    DeleteWorkout,
-    ListWorkout
-)
-
+from .utils import clear_screen, global_messages
+from .workout_modules.create_workout import CreateWorkout
+from .workout_modules.edit_workout import EditWorkout
+from .workout_modules.delete_workout import DeleteWorkout
+from .workout_modules.list_workout import ListWorkout
 
 class Menu:
     MENU = """

@@ -1,6 +1,5 @@
-from menu import Menu
-from storage import Storage
-
+from .menu import Menu
+from .storage import Storage
 
 def main():
     storage = Storage()
