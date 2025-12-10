@@ -1,6 +1,12 @@
 from menu import Menu
 from storage import Storage
 
-storage = Storage()
-storage.load_workouts()
-Menu(storage)
+
+def main():
+    storage = Storage()
+    storage.load_workouts()
+    Menu(storage)
+
+
+if __name__ == '__main__':
+    main()

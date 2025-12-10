@@ -8,7 +8,7 @@ class Storage:
         self.project_root = os.path.join(self.current_dir, "..")
         self.workouts_folder = os.path.abspath(
             os.path.join(self.project_root, "workouts_data")
-            )
+        )
         if not os.path.exists(self.workouts_folder):
             os.makedirs(self.workouts_folder)
 
@@ -24,10 +24,9 @@ class Storage:
 
     def load_workouts(self):
         self.archives = os.listdir(self.workouts_folder)
-        self.json_archives = []
-        for archive in self.archives:
-            if archive.endswith(".json"):
-                self.json_archives.append(archive)
+        self.json_archives = [
+            archive for archive in self.archives if archive.endswith(".json")
+        ]
         for archive in self.json_archives:
             path = os.path.join(self.workouts_folder, archive)
             with open(path, "r", encoding="utf-8") as file:

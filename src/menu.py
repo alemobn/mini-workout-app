@@ -18,30 +18,37 @@ class Menu:
 
     def __init__(self, storage):
         self.storage = storage
+        self.actions = self._setup_actions()
         self.loop_menu()
+
+    def _setup_actions(self):
+        return {
+            '1': CreateWorkout(self.storage).build_workout,
+            'create': CreateWorkout(self.storage).build_workout,
+            'create workout': CreateWorkout(self.storage).build_workout,
+            '2': EditWorkout(self.storage).edit_workout,
+            'edit': EditWorkout(self.storage).edit_workout,
+            'edit workout': EditWorkout(self.storage).edit_workout,
+            '3': DeleteWorkout(self.storage).delete_workout,
+            'delete': DeleteWorkout(self.storage).delete_workout,
+            'delete workout': DeleteWorkout(self.storage).delete_workout,
+            '4': ListWorkout(self.storage).list_workouts,
+            'list': ListWorkout(self.storage).list_workouts,
+            'list workout': ListWorkout(self.storage).list_workouts,
+        }
 
     def loop_menu(self):
         clear_screen()
         print(global_messages['welcome'])
         while True:
-            user_option = input(Menu.MENU)
-            user_option = user_option.lower().strip()
+            user_option = input(Menu.MENU).lower().strip()
             print()
-            if user_option in ['1', 'create', 'create workout']:
-                create_workout = CreateWorkout(self.storage)
-                create_workout.build_workout()
-            elif user_option in ['2', 'edit', 'edit workout']:
-                edit_workout = EditWorkout(self.storage)
-                edit_workout.edit_workout()
-            elif user_option in ['3', 'delete', 'delete workout']:
-                delete_workout = DeleteWorkout(self.storage)
-                delete_workout.delete_workout()
-            elif user_option in ['4', 'list', 'list workout']:
-                ListWorkout(self.storage).list_workouts()
-            elif user_option in ['5', 'exit']:
+            if user_option in ['5', 'exit']:
                 clear_screen()
                 exit()
-            else:
-                clear_screen()
-                print(global_messages['welcome'])
+            action = self.actions.get(user_option)
+            if action:
+                action()
                 continue
+            clear_screen()
+            print(global_messages['welcome'])
