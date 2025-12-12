@@ -20,7 +20,10 @@ class EditWorkout(WorkoutAction):
         'ask_rename_exercise': '\nWhich exercise do you want to rename? ',
         'new_name': 'New name: ',
         'ask_edit_series': '\nWhich exercise series do you want to edit? ',
-        'new_series_number': 'How many series? '
+        'new_series_number': 'How many series? ',
+        'ask_edit_reps': 'Select the exercise number to edit repetitions: ',
+        'new_min_reps': 'Enter the new minimum repetitions: ',
+        'new_max_reps': 'Enter the new maximum repetitions: '
     }
 
     def edit_workout(self):
@@ -34,11 +37,7 @@ class EditWorkout(WorkoutAction):
             return
         editing = True
         while editing:
-            under_development = (
-                '-== This menu is still under development.. ==-\n'
-            )
-            print(under_development)
-            available_options = ['rename workout', 'rename exercise', 'edit series', 'edit description']
+            available_options = ['rename workout', 'rename exercise', 'edit series', 'edit reps', 'edit description']
             workout_name_msg = (
                 f"Workout: {selected_workout['name']}\n"
             )
@@ -69,7 +68,12 @@ class EditWorkout(WorkoutAction):
                     selected_workout,
                     workout_name_msg
                 )
-            elif edit_input_option == '3':
+            if edit_input_option == '3':
+                self.edit_reps(
+                    selected_workout,
+                    workout_name_msg
+                )
+            elif edit_input_option == '4':
                 self.description_edit(
                     selected_workout,
                     workout_name_msg
@@ -157,6 +161,52 @@ class EditWorkout(WorkoutAction):
             else:
                 clear_screen()
                 print(global_messages['invalid_input'])
+
+    def edit_reps(self, workout, title_msg):
+        clear_screen()
+        while True:
+            print(title_msg)
+            exercises = []
+            for day_name, info in workout['days'].items():
+                for exercise in info['exercises']:
+                    exercises.append((day_name, exercise))
+            for i, (day_name, exercise) in enumerate(exercises):
+                print(f"{i}) {exercise['name']} ({day_name.capitalize()}) - {exercise['reps_min']}-{exercise['reps_max']} reps")
+            selected = input(self.EDIT_WORKOUT_MESSAGES['ask_edit_reps'])
+            if selected.isdigit():
+                index = int(selected)
+                if 0 <= index < len(exercises):
+                    day_name, exercise = exercises[index]
+                    clear_screen()
+                    while True:
+                        try:
+                            new_min = int(input(self.EDIT_WORKOUT_MESSAGES['new_min_reps']).strip())
+                            if new_min <= 0:
+                                print(global_messages['invalid_input'])
+                                continue
+                            break
+                        except ValueError:
+                            print(global_messages['invalid_input'])
+                    while True:
+                        try:
+                            new_max = int(input(self.EDIT_WORKOUT_MESSAGES['new_max_reps']).strip())
+                            if new_max < new_min:
+                                print(global_messages['invalid_input'])
+                                continue
+                            break
+                        except ValueError:
+                            print(global_messages['invalid_input'])
+                    exercise['reps_min'] = new_min
+                    exercise['reps_max'] = new_max
+                    clear_screen()
+                    break
+                else:
+                    clear_screen()
+                    print(global_messages['invalid_input'])
+            else:
+                clear_screen()
+                print(global_messages['invalid_input'])
+
 
     def description_edit(self, workout, title_msg):
         clear_screen()
