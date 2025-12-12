@@ -3,7 +3,8 @@ from ..utils import (
     clear_screen,
     is_nonempty_string,
     validate_positive_int,
-    get_validated_input
+    get_validated_input,
+    format_line_breaks
 )
 
 class CreateWorkout:
@@ -175,9 +176,8 @@ class CreateWorkout:
             elif ask_description in ['y', 'yes']:
                 while True:
                     clear_screen()
-                    line_break = ':break:'
-                    description = input(self.CREATE_WORKOUT_MESSAGES['description'])
-                    description = description.replace(line_break, '\n')
+                    description_input = input(self.CREATE_WORKOUT_MESSAGES['description'])
+                    description = format_line_breaks(description_input)
                     self.workout_data['description'] = description
                     break
                 break

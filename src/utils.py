@@ -57,3 +57,8 @@ def validate_positive_int(value, error_msg):
     if num <= 0:
         raise ValueError(error_msg)
     return num
+
+
+def format_line_breaks(text_input):
+    line_break = ':break:'
+    return text_input.replace(line_break, '\n')

@@ -2,7 +2,8 @@ from .workout_action import WorkoutAction
 from ..utils import (
     global_messages,
     clear_screen,
-    check_empty_list
+    check_empty_list,
+    format_line_breaks
 )
 
 class EditWorkout(WorkoutAction):
@@ -11,7 +12,9 @@ class EditWorkout(WorkoutAction):
         'invalid_edit_workout_option': 'Invalid option.',
         'available_for_edit': 'Available for editing:\n',
         'ask_edit_workout_item': 'Which item do you want to edit? ',
-        'ask_new_workout_name': 'What name would you like to use? '
+        'ask_new_workout_name': 'What name would you like to use? ',
+        'current_description': 'Your current description:\n\n',
+        'new_description': 'New description (Enter to keep):\n\n'
     }
 
     def edit_workout(self):
@@ -29,7 +32,7 @@ class EditWorkout(WorkoutAction):
                 '-== This menu is still under development.. ==-\n'
             )
             print(under_development)
-            available_options = ['rename workout']
+            available_options = ['rename workout', 'edit description']
             workout_name_msg = (
                 f"Workout: {selected_workout['name']}\n"
             )
@@ -47,6 +50,11 @@ class EditWorkout(WorkoutAction):
                 break
             if edit_input_option == '0':
                 self.rename_workout(
+                    selected_workout,
+                    workout_name_msg
+                )
+            elif edit_input_option == '1':
+                self.description_edit(
                     selected_workout,
                     workout_name_msg
                 )
@@ -71,3 +79,15 @@ class EditWorkout(WorkoutAction):
             )
             rename_workout_flag = False
             clear_screen()
+
+    def description_edit(self, workout, title_msg):
+        clear_screen()
+        print(title_msg)
+        current_desc = workout['description']
+        print(f"{self.EDIT_WORKOUT_MESSAGES['current_description']}{current_desc}\n")
+        new_desc_input = input(self.EDIT_WORKOUT_MESSAGES['new_description'])
+        new_desc = format_line_breaks(new_desc_input)
+        if new_desc.strip():
+            workout['description'] = new_desc
+            clear_screen()
+        clear_screen()
