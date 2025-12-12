@@ -4,6 +4,7 @@ from ..utils import (
     clear_screen
 )
 
+
 class WorkoutAction:
     def __init__(self, storage):
         self.storage = storage
@@ -18,12 +19,12 @@ class WorkoutAction:
             )
             for i, workout in enumerate(self.storage.workouts):
                 print(f'{i})', workout['name'])
-            print(f"\n{global_messages['back']}")  
+            print(f"\n{global_messages['back']}")
             user_input = input(prompt_msg).strip().lower()
             clear_screen()
             if user_input in ['b', 'back']:
                 print(global_messages['welcome'])
-                return None 
+                return None
             if user_input.isdigit():
                 index = int(user_input)
                 if 0 <= index < len(self.storage.workouts):

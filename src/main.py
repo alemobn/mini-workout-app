@@ -1,6 +1,7 @@
 from .menu import Menu
 from .storage import Storage
 
+
 def main():
     storage = Storage()
     storage.load_workouts()

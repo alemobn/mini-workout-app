@@ -1,6 +1,7 @@
 import os
 import json
 
+
 class Storage:
     def __init__(self):
         self.current_dir = os.path.dirname(__file__)

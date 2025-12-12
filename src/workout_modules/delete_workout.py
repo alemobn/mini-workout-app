@@ -5,6 +5,7 @@ from ..utils import (
     check_empty_list
 )
 
+
 class DeleteWorkout(WorkoutAction):
     DELETE_WORKOUT_MESSAGES = {
         'ask_delete': 'Which workout do you wish to delete? ',
@@ -17,7 +18,7 @@ class DeleteWorkout(WorkoutAction):
     def delete_workout(self):
         clear_screen()
         if check_empty_list(self.storage.workouts):
-            return   
+            return
         workout_to_delete = self._list_and_select_workout(
             self.DELETE_WORKOUT_MESSAGES['ask_delete']
         )

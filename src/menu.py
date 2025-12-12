@@ -4,6 +4,7 @@ from .workout_modules.edit_workout import EditWorkout
 from .workout_modules.delete_workout import DeleteWorkout
 from .workout_modules.list_workout import ListWorkout
 
+
 class Menu:
     MENU = """
 1. Create workout
